@@ -11,6 +11,10 @@
 
         <lang.elementManipulator forClass="nl.hannahsten.texifyidea.psi.impl.LatexEnvironmentImpl"
                                  implementationClass="nl.hannahsten.texifyidea.psi.LatexEnvironmentManipulator"/>
-        <languageInjector implementation="nl.hannahsten.texifyidea.psi.LatexLanguageInjector" />
+        <lang.elementManipulator forClass="nl.hannahsten.texifyidea.psi.impl.LatexRawTextImpl"
+                                 implementationClass="nl.hannahsten.texifyidea.psi.LatexRawTextManipulator"/>
+        <languageInjectionContributor
+                implementationClass="nl.hannahsten.texifyidea.psi.LatexLanguageInjectionContributor"
+                language="Latex"/>
     </extensions>
 </idea-plugin>
