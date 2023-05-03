@@ -5,22 +5,21 @@ import com.intellij.psi.AbstractElementManipulator
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.util.PsiTreeUtil
 import nl.hannahsten.texifyidea.grammar.LatexLanguage
-import nl.hannahsten.texifyidea.psi.impl.LatexEnvironmentImpl
-import nl.hannahsten.texifyidea.psi.impl.LatexRawTextImpl
+import nl.hannahsten.texifyidea.psi.impl.LatexEnvironmentContentImpl
 
 /**
- * Enable editing raw text content in a separate window (when using language injection).
+ * Enable editing environment content in a separate window (when using language injection).
  */
-class LatexRawTextManipulator : AbstractElementManipulator<LatexRawTextImpl>() {
+class LatexEnvironmentContentManipulator : AbstractElementManipulator<LatexEnvironmentContentImpl>() {
 
     override fun handleContentChange(
-            element: LatexRawTextImpl,
+            element: LatexEnvironmentContentImpl,
             range: TextRange,
             newContent: String
-    ): LatexRawTextImpl? {
+    ): LatexEnvironmentContentImpl? {
         val file = PsiFileFactory.getInstance(element.project)
                 .createFileFromText("temp.tex", LatexLanguage, newContent)
-        val res = PsiTreeUtil.findChildOfType(file, LatexEnvironmentImpl::class.java) ?: return null
+        val res = PsiTreeUtil.findChildOfType(file, LatexEnvironmentContentImpl::class.java) ?: return null
         element.replace(res)
         return element
     }

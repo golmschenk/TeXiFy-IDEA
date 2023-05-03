@@ -101,22 +101,38 @@ public class LatexPsiImplUtil {
 
 
     /*
-     * LatexRawText
+     * LatexEnvironmentContent
      */
 
-    public static boolean isValidHost(@NotNull LatexRawText element) {
+    public static boolean isValidHost(@NotNull LatexEnvironmentContent element) {
         return true;
     }
 
-    public static PsiLanguageInjectionHost updateText(@NotNull LatexRawText element, @NotNull String text) {
+    public static PsiLanguageInjectionHost updateText(@NotNull LatexEnvironmentContent element, @NotNull String text) {
         return ElementManipulators.handleContentChange(element, text);
     }
 
     @NotNull
-    public static LiteralTextEscaper<LatexRawText> createLiteralTextEscaper(@NotNull LatexRawText element) {
+    public static LiteralTextEscaper<LatexEnvironmentContent> createLiteralTextEscaper(@NotNull LatexEnvironmentContent element) {
         return LiteralTextEscaper.createSimple(element);
     }
 
+    /*
+     * LatexRequiredParamContent
+     */
+
+    public static boolean isValidHost(@NotNull LatexRequiredParamContent element) {
+        return true;
+    }
+
+    public static PsiLanguageInjectionHost updateText(@NotNull LatexRequiredParamContent element, @NotNull String text) {
+        return ElementManipulators.handleContentChange(element, text);
+    }
+
+    @NotNull
+    public static LiteralTextEscaper<LatexRequiredParamContent> createLiteralTextEscaper(@NotNull LatexRequiredParamContent element) {
+        return LiteralTextEscaper.createSimple(element);
+    }
 
 
     /*

@@ -10,6 +10,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static nl.hannahsten.texifyidea.psi.LatexTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.hannahsten.texifyidea.psi.*;
+import com.intellij.psi.LiteralTextEscaper;
+import com.intellij.psi.PsiLanguageInjectionHost;
 
 public class LatexEnvironmentContentImpl extends ASTWrapperPsiElement implements LatexEnvironmentContent {
 
@@ -31,6 +33,21 @@ public class LatexEnvironmentContentImpl extends ASTWrapperPsiElement implements
   @NotNull
   public List<LatexNoMathContent> getNoMathContentList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, LatexNoMathContent.class);
+  }
+
+  @Override
+  public boolean isValidHost() {
+    return LatexPsiImplUtil.isValidHost(this);
+  }
+
+  @Override
+  public PsiLanguageInjectionHost updateText(@NotNull String text) {
+    return LatexPsiImplUtil.updateText(this, text);
+  }
+
+  @Override
+  public @NotNull LiteralTextEscaper<LatexEnvironmentContent> createLiteralTextEscaper() {
+    return LatexPsiImplUtil.createLiteralTextEscaper(this);
   }
 
 }

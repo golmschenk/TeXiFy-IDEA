@@ -31,7 +31,8 @@
     // Make text have an identifier, to be able to Ctrl+B for \label parameters
     implements("parameter_text")="com.intellij.psi.PsiNameIdentifierOwner"
 
-    implements("raw_text")="com.intellij.psi.PsiLanguageInjectionHost"
+    implements("environment_content")="com.intellij.psi.PsiLanguageInjectionHost"
+    implements("required_param_content")="com.intellij.psi.PsiLanguageInjectionHost"
 
     implements("key_val_pair")="nl.hannahsten.texifyidea.psi.LatexKeyValuePair"
     implements("strict_key_val_pair")="nl.hannahsten.texifyidea.psi.LatexKeyValuePair"
@@ -74,7 +75,9 @@ environment ::= begin_command environment_content? end_command {
 
 // There cannot be empty content in an environment, because it will break formatting related things
 // because there would be an empty content just before \end{env}
-environment_content ::= <<injection_env_content raw_text>> | no_math_content+
+environment_content ::= <<injection_env_content raw_text>> | no_math_content+ {
+    methods=[isValidHost updateText createLiteralTextEscaper]
+}
 
 pseudocode_block ::= BEGIN_PSEUDOCODE_BLOCK parameter* pseudocode_block_content? (MIDDLE_PSEUDOCODE_BLOCK pseudocode_block_content?)* (END_PSEUDOCODE_BLOCK parameter*) { pin=5 }
 
@@ -116,7 +119,9 @@ picture_param ::= OPEN_PAREN picture_param_content* CLOSE_PAREN { pin=3 }
 // We have to separate optional and required parameter content, because required parameter content
 // can contain mismatched brackets, but optional parameters not (then we wouldn't know what to match)
 optional_param_content ::= raw_text | magic_comment | comment | environment | pseudocode_block | math_environment | COMMAND_IFNEXTCHAR | commands | group | OPEN_PAREN | CLOSE_PAREN | parameter_text | BACKSLASH | OPEN_ANGLE_BRACKET | CLOSE_ANGLE_BRACKET
-required_param_content ::= raw_text | magic_comment | comment | environment | pseudocode_block | math_environment | COMMAND_IFNEXTCHAR | group | OPEN_PAREN | CLOSE_PAREN | parameter_text | COMMA | EQUALS | OPEN_BRACKET | CLOSE_BRACKET | BACKSLASH | OPEN_ANGLE_BRACKET | CLOSE_ANGLE_BRACKET
+required_param_content ::= raw_text | magic_comment | comment | environment | pseudocode_block | math_environment | COMMAND_IFNEXTCHAR | group | OPEN_PAREN | CLOSE_PAREN | parameter_text | COMMA | EQUALS | OPEN_BRACKET | CLOSE_BRACKET | BACKSLASH | OPEN_ANGLE_BRACKET | CLOSE_ANGLE_BRACKET {
+    methods=[isValidHost updateText createLiteralTextEscaper]
+}
 // Cannot contain ( or )
 picture_param_content ::= raw_text | magic_comment | comment | environment | pseudocode_block | math_environment | COMMAND_IFNEXTCHAR | commands | group | parameter_text | BACKSLASH | COMMA | EQUALS | OPEN_BRACKET | CLOSE_BRACKET | OPEN_ANGLE_BRACKET | CLOSE_ANGLE_BRACKET
 
@@ -169,6 +174,4 @@ display_math ::= DISPLAY_MATH_START math_content? DISPLAY_MATH_END { pin=1 }
 // element (having a math_content element allows for easily finding all contents in a math environment for example)
 math_content ::= no_math_content+
 
-raw_text ::= RAW_TEXT_TOKEN+ {
-    methods=[isValidHost updateText createLiteralTextEscaper]
-}
+raw_text ::= RAW_TEXT_TOKEN+

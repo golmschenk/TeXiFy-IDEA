@@ -10,6 +10,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static nl.hannahsten.texifyidea.psi.LatexTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.hannahsten.texifyidea.psi.*;
+import com.intellij.psi.LiteralTextEscaper;
+import com.intellij.psi.PsiLanguageInjectionHost;
 
 public class LatexRequiredParamContentImpl extends ASTWrapperPsiElement implements LatexRequiredParamContent {
 
@@ -73,6 +75,21 @@ public class LatexRequiredParamContentImpl extends ASTWrapperPsiElement implemen
   @Nullable
   public LatexRawText getRawText() {
     return PsiTreeUtil.getChildOfType(this, LatexRawText.class);
+  }
+
+  @Override
+  public boolean isValidHost() {
+    return LatexPsiImplUtil.isValidHost(this);
+  }
+
+  @Override
+  public PsiLanguageInjectionHost updateText(@NotNull String text) {
+    return LatexPsiImplUtil.updateText(this, text);
+  }
+
+  @Override
+  public @NotNull LiteralTextEscaper<LatexRequiredParamContent> createLiteralTextEscaper() {
+    return LatexPsiImplUtil.createLiteralTextEscaper(this);
   }
 
 }

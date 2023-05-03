@@ -23,61 +23,57 @@ import java.util.*
 class LatexLanguageInjectionContributor : LanguageInjectionContributor {
     override fun getInjection(context: PsiElement): Injection? {
         var language: Language? = null
-        if (context is LatexRawText) {
-            if (context.parent is LatexEnvironmentContent) {
-                if (context.parent.parent is LatexEnvironment) {
-                    val host = context.parent.parent as LatexEnvironment
-                    val magicComment = host.magicComment()
-                    val hasMagicCommentKey = magicComment.containsKey(DefaultMagicKeys.INJECT_LANGUAGE)
+        if (context is LatexEnvironmentContent) {
+            if (context.parent is LatexEnvironment) {
+                val host = context.parent as LatexEnvironment
+                val magicComment = host.magicComment()
+                val hasMagicCommentKey = magicComment.containsKey(DefaultMagicKeys.INJECT_LANGUAGE)
 
-                    val languageId = when {
-                        hasMagicCommentKey -> {
-                            magicComment.value(DefaultMagicKeys.INJECT_LANGUAGE)
-                        }
-
-                        host.environmentName == "lstlisting" -> {
-                            host.beginCommand.optionalParameterMap.toStringMap().getOrDefault("language", null)
-                        }
-
-                        host.environmentName in EnvironmentMagic.languageInjections.keys -> {
-                            EnvironmentMagic.languageInjections[host.environmentName]
-                        }
-
-                        host.environmentName.endsWith("code", ignoreCase = false) -> {
-                            // Environment may have been defined with the \newminted shortcut (see minted documentation)
-                            host.environmentName.remove("code")
-                        }
-
-                        else -> {
-                            null
-                        }
-                    } ?: return null
-
-                    language = findLanguage(languageId) ?: return null
-
-                    // A parser definition is required
-                    if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) return null
-                }
-            }
-
-            if (context.parent is LatexRequiredParamContent) {
-                if (context.parent.parent is LatexRequiredParam) {
-                    if (context.parent.parent.parent is LatexParameter) {
-                        val host = context.parent.parent.parent as LatexParameter
-                        val parent = host.parentOfType(LatexCommands::class) ?: return null
-
-                        val languageId = CommandMagic.languageInjections[parent.commandToken.text.substring(1)]
-                        language = findLanguage(languageId) ?: return null
+                val languageId = when {
+                    hasMagicCommentKey -> {
+                        magicComment.value(DefaultMagicKeys.INJECT_LANGUAGE)
                     }
-                }
-            }
 
-            language ?: return null
-            if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) return null
-            return SimpleInjection(language, "", "", null)
+                    host.environmentName == "lstlisting" -> {
+                        host.beginCommand.optionalParameterMap.toStringMap().getOrDefault("language", null)
+                    }
+
+                    host.environmentName in EnvironmentMagic.languageInjections.keys -> {
+                        EnvironmentMagic.languageInjections[host.environmentName]
+                    }
+
+                    host.environmentName.endsWith("code", ignoreCase = false) -> {
+                        // Environment may have been defined with the \newminted shortcut (see minted documentation)
+                        host.environmentName.remove("code")
+                    }
+
+                    else -> {
+                        null
+                    }
+                } ?: return null
+
+                language = findLanguage(languageId) ?: return null
+
+                // A parser definition is required
+                if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) return null
+            }
         }
 
-        return null
+        if (context is LatexRequiredParamContent) {
+            if (context.parent is LatexRequiredParam) {
+                if (context.parent.parent is LatexParameter) {
+                    val parameter = context.parent.parent as LatexParameter
+                    val parent = parameter.parentOfType(LatexCommands::class) ?: return null
+
+                    val languageId = CommandMagic.languageInjections[parent.commandToken.text.substring(1)]
+                    language = findLanguage(languageId) ?: return null
+                }
+            }
+        }
+
+        language ?: return null
+        if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) return null
+        return SimpleInjection(language, "", "", null)
     }
 
     private fun findLanguage(id: String?): Language? {

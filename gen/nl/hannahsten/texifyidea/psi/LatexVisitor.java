@@ -39,7 +39,7 @@ public class LatexVisitor extends PsiElementVisitor {
   }
 
   public void visitEnvironmentContent(@NotNull LatexEnvironmentContent o) {
-    visitPsiElement(o);
+    visitPsiLanguageInjectionHost(o);
   }
 
   public void visitGroup(@NotNull LatexGroup o) {
@@ -127,7 +127,7 @@ public class LatexVisitor extends PsiElementVisitor {
   }
 
   public void visitRawText(@NotNull LatexRawText o) {
-    visitPsiLanguageInjectionHost(o);
+    visitPsiElement(o);
   }
 
   public void visitRequiredParam(@NotNull LatexRequiredParam o) {
@@ -135,7 +135,7 @@ public class LatexVisitor extends PsiElementVisitor {
   }
 
   public void visitRequiredParamContent(@NotNull LatexRequiredParamContent o) {
-    visitPsiElement(o);
+    visitPsiLanguageInjectionHost(o);
   }
 
   public void visitStrictKeyValPair(@NotNull LatexStrictKeyValPair o) {

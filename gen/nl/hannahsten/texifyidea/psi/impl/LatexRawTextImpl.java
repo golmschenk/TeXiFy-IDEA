@@ -10,8 +10,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static nl.hannahsten.texifyidea.psi.LatexTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.hannahsten.texifyidea.psi.*;
-import com.intellij.psi.LiteralTextEscaper;
-import com.intellij.psi.PsiLanguageInjectionHost;
 
 public class LatexRawTextImpl extends ASTWrapperPsiElement implements LatexRawText {
 
@@ -27,21 +25,6 @@ public class LatexRawTextImpl extends ASTWrapperPsiElement implements LatexRawTe
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LatexVisitor) accept((LatexVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  public boolean isValidHost() {
-    return LatexPsiImplUtil.isValidHost(this);
-  }
-
-  @Override
-  public PsiLanguageInjectionHost updateText(@NotNull String text) {
-    return LatexPsiImplUtil.updateText(this, text);
-  }
-
-  @Override
-  public @NotNull LiteralTextEscaper<LatexRawText> createLiteralTextEscaper() {
-    return LatexPsiImplUtil.createLiteralTextEscaper(this);
   }
 
 }
