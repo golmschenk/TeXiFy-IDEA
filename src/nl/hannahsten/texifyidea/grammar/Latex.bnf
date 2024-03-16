@@ -20,7 +20,6 @@
     tokenTypeClass="nl.hannahsten.texifyidea.psi.LatexTokenType"
 
     extends("environment")="com.intellij.extapi.psi.StubBasedPsiElementBase<nl.hannahsten.texifyidea.index.stub.LatexEnvironmentStub>"
-    implements("environment")="com.intellij.psi.PsiLanguageInjectionHost"
 
     implements("begin_command") = "nl.hannahsten.texifyidea.psi.LatexCommandWithParams"
 
@@ -28,7 +27,7 @@
     // Make text have an identifier, to be able to Ctrl+B for \label parameters
     implements("parameter_text")="com.intellij.psi.PsiNameIdentifierOwner"
 
-    implements("parameter")="com.intellij.psi.PsiLanguageInjectionHost"
+    implements("raw_text")="com.intellij.psi.PsiLanguageInjectionHost"
 
     // Used for displaying something else than the token name in the psi tree
     tokens=[
@@ -92,9 +91,7 @@ begin_command ::= BEGIN_TOKEN STAR? parameter* {
 
 end_command ::= END_TOKEN STAR? parameter* { pin=1 }
 
-parameter ::= optional_param | required_param | picture_param | ANGLE_PARAM {
-    mixin="nl.hannahsten.texifyidea.psi.impl.LatexParameterImplMixin"
-}
+parameter ::= optional_param | required_param | picture_param | ANGLE_PARAM
 
 // pin=3 makes sure that an optional parameter is only matched successfully when
 // it also encounters a close bracket. So '[' at the beginning of a (math) environment
@@ -171,4 +168,6 @@ display_math ::= DISPLAY_MATH_START math_content? DISPLAY_MATH_END { pin=1 }
 // element (having a math_content element allows for easily finding all contents in a math environment for example)
 math_content ::= no_math_content+
 
-raw_text ::= RAW_TEXT_TOKEN+
+raw_text ::= RAW_TEXT_TOKEN+ {
+    mixin="nl.hannahsten.texifyidea.psi.impl.LatexRawTextImplMixin"
+}

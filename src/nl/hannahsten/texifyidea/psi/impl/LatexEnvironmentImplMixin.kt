@@ -2,9 +2,6 @@ package nl.hannahsten.texifyidea.psi.impl
 
 import com.intellij.extapi.psi.StubBasedPsiElementBase
 import com.intellij.lang.ASTNode
-import com.intellij.psi.ElementManipulators
-import com.intellij.psi.LiteralTextEscaper
-import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.tree.IElementType
 import nl.hannahsten.texifyidea.index.stub.LatexEnvironmentStub
@@ -16,15 +13,4 @@ abstract class LatexEnvironmentImplMixin : LatexEnvironment, StubBasedPsiElement
     constructor(node: ASTNode) : super(node)
     constructor(stub: LatexEnvironmentStub?, nodeType: IElementType?, node: ASTNode?) : super(stub, nodeType, node)
 
-    override fun isValidHost(): Boolean {
-        return true
-    }
-
-    override fun updateText(text: String): PsiLanguageInjectionHost {
-        return ElementManipulators.handleContentChange(this, text)
-    }
-
-    override fun createLiteralTextEscaper(): LiteralTextEscaper<LatexEnvironment> {
-        return LiteralTextEscaper.createSimple(this)
-    }
 }
