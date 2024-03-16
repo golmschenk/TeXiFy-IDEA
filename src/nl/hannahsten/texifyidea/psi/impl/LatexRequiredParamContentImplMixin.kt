@@ -5,10 +5,9 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.ElementManipulators
 import com.intellij.psi.LiteralTextEscaper
 import com.intellij.psi.PsiLanguageInjectionHost
-import nl.hannahsten.texifyidea.psi.LatexParameter
-import nl.hannahsten.texifyidea.psi.LatexRawText
+import nl.hannahsten.texifyidea.psi.LatexRequiredParamContent
 
-abstract class LatexRawTextImplMixin(node: ASTNode) : ASTWrapperPsiElement(node), LatexRawText {
+abstract class LatexRequiredParamContentImplMixin(node: ASTNode) : ASTWrapperPsiElement(node), LatexRequiredParamContent {
 
     override fun isValidHost(): Boolean {
         return true
@@ -18,7 +17,7 @@ abstract class LatexRawTextImplMixin(node: ASTNode) : ASTWrapperPsiElement(node)
         return ElementManipulators.handleContentChange(this, text)
     }
 
-    override fun createLiteralTextEscaper(): LiteralTextEscaper<LatexRawText> {
+    override fun createLiteralTextEscaper(): LiteralTextEscaper<LatexRequiredParamContent> {
         return LiteralTextEscaper.createSimple(this)
     }
 }

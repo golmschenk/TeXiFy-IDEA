@@ -11,8 +11,10 @@
 
         <lang.elementManipulator forClass="nl.hannahsten.texifyidea.psi.impl.LatexEnvironmentImpl"
                                  implementationClass="nl.hannahsten.texifyidea.psi.LatexEnvironmentManipulator"/>
-        <lang.elementManipulator forClass="nl.hannahsten.texifyidea.psi.impl.LatexRawTextImpl"
-                                 implementationClass="nl.hannahsten.texifyidea.psi.LatexRawTextManipulator"/>
+        <lang.elementManipulator forClass="nl.hannahsten.texifyidea.psi.impl.LatexEnvironmentContentImpl"
+                                 implementationClass="nl.hannahsten.texifyidea.psi.LatexEnvironmentContentManipulator"/>
+        <lang.elementManipulator forClass="nl.hannahsten.texifyidea.psi.impl.LatexRequiredParamContentImpl"
+                                 implementationClass="nl.hannahsten.texifyidea.psi.LatexRequiredParamContentManipulator"/>
         <languageInjectionContributor
                 implementationClass="nl.hannahsten.texifyidea.psi.LatexLanguageInjectionContributor"
                 language="Latex"/>
